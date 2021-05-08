@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Roshambo.Mobile.Views.PlayView"
+             xmlns:vm="clr-namespace:Roshambo.Mobile.ViewModels"
+             xmlns:converters="clr-namespace:Roshambo.Mobile.Converters">
+
+    <ContentPage.BindingContext>
+        <vm:PlayViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <x:Boolean x:Key="FalseValue">False</x:Boolean>
+        <x:Boolean x:Key="TrueValue">True</x:Boolean>
+
+        <converters:StringToImageConverter x:Key="imageConverter"/>
+
+        <ResourceDictionary>
+            <Style TargetType="Button">
+                <Setter Property="CornerRadius" Value="10"/>
+                <Setter Property="BackgroundColor" Value="LightGreen"/>
+                <Setter Property="TextColor" Value="Blue"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="Large"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+            </Style>
+        </ResourceDictionary>
+        
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid Margin="15" 
+                  RowSpacing="15"
+                  ColumnSpacing="15"
+                  RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto"
+                  ColumnDefinitions="*,*,*,*">
+            
+                <Button Grid.Row="0"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Text="Take Photo"
+                        Command="{Binding TakePhotoCommand}"
+                        CommandParameter="{StaticResource TrueValue}"/>
+
+                <Button Grid.Row="0"
+                        Grid.Column="2"
+                        Grid.ColumnSpan="2"
+                        Text="Pick Photo"
+                        Command="{Binding TakePhotoCommand}"
+                        CommandParameter="{StaticResource FalseValue}"/>
+
+                <Image Grid.Row="1"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="4"
+                       HorizontalOptions="Center"
+                       WidthRequest="200"
+                       HeightRequest="200"
+                       Aspect="AspectFill"
+                       Source="{Binding PhotoFullPath}"/>
+
+                <Image Grid.Row="2"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       HorizontalOptions="Center"
+                       WidthRequest="125"
+                       HeightRequest="125"
+                       Aspect="AspectFill"
+                       Source="{Binding PlayerMove, Converter={StaticResource imageConverter}, ConverterParameter='player'}"/>
+
+                <Image Grid.Row="2"
+                       Grid.Column="2"
+                       Grid.ColumnSpan="2"
+                       HorizontalOptions="Center"
+                       WidthRequest="125"
+                       HeightRequest="125"
+                       Aspect="AspectFill"
+                       Source="{Binding CpuMove, Converter={StaticResource imageConverter}, ConverterParameter='cpu'}"/>
+
+                <Label Grid.Row="3"
+                       Grid.Column="0"
+                       Grid.ColumnSpan="2"
+                       TextColor="Blue"
+                       Text="{Binding PlayerMove}"/>
+
+                <Label Grid.Row="3"
+                       Grid.Column="2"
+                       Grid.ColumnSpan="2"
+                       TextColor="Red"
+                       Text="{Binding CpuMove}"/>
+
+                <ActivityIndicator Grid.Row="4"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="4"
+                                   HorizontalOptions="Center"
+                                   Color="Orange"
+                                   IsRunning="{Binding IsBusy}" />
+
+                <Button Grid.Row="5"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Text="Classify"
+                        Command="{Binding ClassifyCommand}"/>
+
+                <Label Grid.Row="5"
+                       Grid.Column="2"
+                       Grid.ColumnSpan="2"
+                       TextColor="ForestGreen"
+                       Text="{Binding PlayResult}"/>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

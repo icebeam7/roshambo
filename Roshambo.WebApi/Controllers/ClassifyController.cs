@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 using Roshambo.Models;
 using Roshambo.WebApi.Helpers;
+using Newtonsoft.Json;
 
 namespace Roshambo.WebApi.Controllers
 {
@@ -37,10 +38,12 @@ namespace Roshambo.WebApi.Controllers
                     ImagePath = localPath
                 };
 
-                if (!string.IsNullOrWhiteSpace(localPath))
+                if (!localPath.StartsWith("Error"))
+                    //if (!string.IsNullOrWhiteSpace(localPath))
                     prediction = _predictionEnginePool.Predict(modelName: Constants.ModelName, example: gesture);
                 else
-                    prediction.PredictedLabel = "N/A";
+                    prediction.PredictedLabel = localPath;
+                    //prediction.PredictedLabel = "N/A";
 
                 return Ok(prediction);
             }
@@ -74,7 +77,8 @@ namespace Roshambo.WebApi.Controllers
             }
             catch (Exception e)
             {
-                //log error
+                var s = JsonConvert.SerializeObject(e);
+                return $"Error {s}";
             }
 
             return localFilePath;
