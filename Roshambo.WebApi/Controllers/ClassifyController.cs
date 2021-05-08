@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.ML;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 using Roshambo.Models;
 using Roshambo.WebApi.Helpers;
-using Microsoft.AspNetCore.Http;
 
 namespace Roshambo.WebApi.Controllers
 {
@@ -25,22 +25,33 @@ namespace Roshambo.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(IFormFile file)
         {
-            var prediction = new HandGesturePrediction();
-            var localPath = await WriteFile(file);
+            var gesture = new HandGesture();
 
-            if (!string.IsNullOrWhiteSpace(localPath))
+            try
             {
-                var gesture = new HandGesture()
+                var prediction = new HandGesturePrediction();
+                var localPath = await WriteFile(file);
+
+                gesture = new HandGesture()
                 {
                     ImagePath = localPath
                 };
 
-                prediction = _predictionEnginePool.Predict(modelName: Constants.ModelName, example: gesture);
-            }
-            else
-                prediction.PredictedLabel = "N/A";
+                if (!string.IsNullOrWhiteSpace(localPath))
+                    prediction = _predictionEnginePool.Predict(modelName: Constants.ModelName, example: gesture);
+                else
+                    prediction.PredictedLabel = "N/A";
 
-            return Ok(prediction);
+                return Ok(prediction);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                /*
+                var s = JsonConvert.SerializeObject(ex);
+                gesture.ActualGesture = s;
+                return Ok(gesture);*/
+            }
         }
 
         private async Task<string> WriteFile(IFormFile file)
