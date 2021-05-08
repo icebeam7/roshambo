@@ -64,7 +64,6 @@ namespace Roshambo.ML
 
         static void Main(string[] args)
         {
-            /*
             var context = new MLContext();
 
             PrintMessage("Loading data");
@@ -133,7 +132,7 @@ namespace Roshambo.ML
             context.Model.Save(model, trainingImagesDataView.Schema, mlModelPath);
 
             PrintMessage("Model saved");
-            */
+
             PrintMessage("Classifying several images");
             ConsumingModel(testImagesPath);
         }

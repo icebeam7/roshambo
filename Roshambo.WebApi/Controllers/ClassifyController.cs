@@ -28,7 +28,7 @@ namespace Roshambo.WebApi.Controllers
             var prediction = new HandGesturePrediction();
             var localPath = await WriteFile(file);
 
-            if (string.IsNullOrWhiteSpace(localPath))
+            if (!string.IsNullOrWhiteSpace(localPath))
             {
                 var gesture = new HandGesture()
                 {
